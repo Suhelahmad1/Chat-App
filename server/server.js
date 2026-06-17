@@ -9,18 +9,19 @@ import { Server } from "socket.io";
 import authRouter from "./routes/user.routes.js";
 import messageRouter from "./routes/message.routes.js";
 
+// Creating express app using http server
 const app = express();
 const server = http.createServer(app);
 
-// Initialize socket.io server
+//initialize socket.io server
 export const io = new Server(server, {
   cors: { origin: "*" },
 });
 
-// Store online user
-export const userSocketMap = {};
+//Store online user
+export const userSocketMap = {}; // {userId : socketId}
 
-// Socket.io connection handler
+//Socket.io connection handler
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   console.log("User Connected :", userId);
@@ -29,6 +30,7 @@ io.on("connection", (socket) => {
     userSocketMap[userId] = socket.id;
   }
 
+  // emit online users to all connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("disconnect", () => {
@@ -38,24 +40,25 @@ io.on("connection", (socket) => {
   });
 });
 
-// Middleware setups (10mb limits for base64 images)
+// Middleware setups (Dono limits ko 10mb kiya hai base64 ke liye)
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cors());
 
-// Connect to MongoDB (Top-level await keeps connection alive)
-await connectDB();
-
-// Routes setup
+//routes setup
 app.use("/api/status", (req, res) => res.send("Server is live"));
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
 
-// FIXED: Hamesha listen karo, chahe local ho ya production/Vercel
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () =>
-  console.log("Server is running on the PORT: " + PORT),
-);
+// Connect to MongoDB
+await connectDB();
 
-// Export app/server for Vercel Serverless Architecture
-export default app;
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  server.listen(PORT, () =>
+    console.log("Server is running on the PORT: " + PORT),
+  );
+}
+
+// Export server for Vercel
+export default server;
