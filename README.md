@@ -2,6 +2,8 @@
 
 A blazing fast, full-stack real-time chat application featuring secure user authentication, instant messaging, live status indicators, and sleek profile customization. Built using the MERN stack and fine-tuned for serverless deployment on Vercel.
 
+### 🌐 Live Links
+- **Live Frontend App:** [https://chat-app-git-main-suhel-ahmads-projects.vercel.app](https://chat-app-git-main-suhel-ahmads-projects.vercel.app)
 ---
 
 ## 🚀 Features
