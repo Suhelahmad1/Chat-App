@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import "tailwindcss";
+
+/* 1. Global Font and Base Styling */
+@layer base {
+  * {
+    font-family: "Outfit", sans-serif;
+  }
+
+  /* 2. Pure app se scrollbar track hide karne ka pakka ilaaj (Scroll chalu rahega) */
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  * {
+    -ms-overflow-style: none !important; /* IE and Edge */
+    scrollbar-width: none !important; /* Firefox */
+  }
+}
